@@ -6,9 +6,19 @@ Usa a mesma base de formatos do CSBuilder (`data/base-formatos.xlsx`), por isso 
 
 ## Como usar
 
+### Verificação simples (ficheiro a ficheiro)
+
 1. **Carrega os materiais** — arrasta vários ficheiros para a zona de upload, ou escolhe-os de uma vez (imagens, vídeos, HTML5, PDF).
 2. **Atribui um formato a cada um** — pesquisa por fornecedor ou nome do formato no campo de cada material. Se vários materiais forem para o mesmo formato (ex.: versão desktop + mobile de um Billboard), usa o seletor "Aplicar um formato a todos os materiais" no topo, em vez de repetir a pesquisa.
 3. **Verificar todos** — a ferramenta lê automaticamente a dimensão real, o peso e o tipo de cada ficheiro e compara com a spec do formato escolhido. Cada material fica com um veredito (Aprovado / Reprovado / Não verificável) e a lista detalhada do que passou ou falhou.
+
+### Auditar uma entrega inteira (pasta + checklist)
+
+Para o caso de receber uma pasta com os materiais de uma campanha e precisar de confirmar que está tudo lá e correto:
+
+1. **Define os formatos esperados** — no primeiro cartão da página, pesquisa e adiciona cada formato que esta entrega devia conter (ex.: Halfpage + Billboard + Mrec).
+2. **Carrega a pasta** — botão "Carregar pasta" (ou arrasta a pasta inteira para a zona de upload). A ferramenta lê as dimensões reais de cada ficheiro e associa-o automaticamente ao formato esperado certo — só quando a correspondência é inequívoca (uma única dimensão compatível); caso contrário, fica por atribuir manualmente, para nunca associar errado "à sorte".
+3. **Verificar todos** — aparece um **Relatório de entrega** a dizer, para cada formato esperado: entregue e aprovado, entregue mas reprovado (com o motivo), ou **em falta**. Ficheiros que não correspondem a nenhum formato esperado aparecem à parte, marcados como "Extra".
 
 Nada é enviado para fora do browser — a leitura das dimensões/peso dos ficheiros é feita localmente, no próprio navegador.
 

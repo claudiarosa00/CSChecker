@@ -20,12 +20,35 @@
 
     <!--
     ============================================
-    1. FORMATO EM LOTE (aplicar o mesmo formato a vários materiais)
+    1. FORMATOS ESPERADOS (checklist opcional da entrega)
+    Define o que esta entrega devia conter — ao carregar os
+    materiais, a app tenta associar cada ficheiro ao formato
+    esperado certo pelas dimensões, e no fim mostra o que falta
+    ou está incorreto (ver secaoRelatorio mais abaixo).
+    ============================================
+    -->
+    <section class="cartao">
+      <h2>Formatos esperados nesta entrega <span class="texto-opcional">(opcional)</span></h2>
+      <p class="texto-ajuda">Define aqui os formatos que esta entrega devia incluir. Ao carregares os materiais (ficheiro a ficheiro ou uma pasta inteira), a app tenta associar automaticamente cada ficheiro ao formato esperado certo pelas dimensões, e mostra no relatório o que falta ou não está correto.</p>
+      <div class="linha-lote">
+        <div class="campo-seletor-formato">
+          <input type="text" id="inputFormatoEsperado" class="input-formato" placeholder="Pesquisar fornecedor ou formato para adicionar à lista..." autocomplete="off" data-alvo="esperado">
+        </div>
+      </div>
+      <ul id="listaEsperados" class="lista-esperados"></ul>
+    </section>
+
+    <!--
+    ============================================
+    2. FORMATO EM LOTE (aplicar o mesmo formato a vários materiais)
+    Atalho independente do checklist acima — útil para o caso mais
+    simples de validar várias variantes do mesmo formato sem montar
+    uma lista de formatos esperados.
     ============================================
     -->
     <section class="cartao secao-lote">
       <h2>Aplicar um formato a todos os materiais</h2>
-      <p class="texto-ajuda">Útil quando estás a validar várias variantes do mesmo pedido (ex.: desktop + mobile de um Billboard).</p>
+      <p class="texto-ajuda">Atalho rápido quando todos os materiais carregados são variantes do mesmo formato (ex.: desktop + mobile de um Billboard) e não precisas do checklist acima.</p>
       <div class="linha-lote">
         <div class="campo-seletor-formato">
           <input type="text" id="inputFormatoLote" class="input-formato" placeholder="Pesquisar fornecedor ou formato..." autocomplete="off" data-alvo="lote">
@@ -36,22 +59,26 @@
 
     <!--
     ============================================
-    2. ZONA DE UPLOAD
+    3. ZONA DE UPLOAD
     ============================================
     -->
     <section id="zonaUpload" class="zona-upload">
       <input type="file" id="inputFicheiros" multiple hidden accept="image/*,video/*,.html,.htm,.zip,.pdf">
+      <input type="file" id="inputPasta" webkitdirectory hidden>
       <div class="zona-upload-conteudo">
-        <p class="zona-upload-titulo">Arrasta os materiais para aqui</p>
+        <p class="zona-upload-titulo">Arrasta ficheiros ou uma pasta inteira para aqui</p>
         <p class="zona-upload-subtitulo">ou</p>
-        <button type="button" id="botaoEscolherFicheiros" class="botao-principal">Escolher ficheiros</button>
+        <div class="zona-upload-botoes">
+          <button type="button" id="botaoEscolherFicheiros" class="botao-principal">Escolher ficheiros</button>
+          <button type="button" id="botaoEscolherPasta" class="botao-secundario">Carregar pasta</button>
+        </div>
         <p class="zona-upload-nota">Podes selecionar vários ao mesmo tempo — imagens, vídeos, HTML5 ou PDF.</p>
       </div>
     </section>
 
     <!--
     ============================================
-    3. BARRA DE AÇÕES + RESUMO
+    4. BARRA DE AÇÕES + RESUMO
     ============================================
     -->
     <div id="barraAcoes" class="barra-acoes" hidden>
@@ -64,7 +91,17 @@
 
     <!--
     ============================================
-    4. LISTA DE MATERIAIS
+    5. RELATÓRIO DE ENTREGA (só aparece se houver formatos esperados)
+    ============================================
+    -->
+    <section id="secaoRelatorio" class="cartao" hidden>
+      <h2>Relatório de entrega</h2>
+      <ul id="listaRelatorio" class="lista-relatorio"></ul>
+    </section>
+
+    <!--
+    ============================================
+    6. LISTA DE MATERIAIS
     ============================================
     -->
     <ul id="listaMateriais" class="lista-materiais"></ul>

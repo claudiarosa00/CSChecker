@@ -22,6 +22,8 @@ da mesma família de ferramentas.
   --cor-erro-suave: #fee2e2;
   --cor-neutro: #6b6560;
   --cor-neutro-suave: #ece9e7;
+  --cor-aviso: #b45309;
+  --cor-aviso-suave: #fef3c7;
   --fonte-base: "Arial Nova", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -117,10 +119,52 @@ input:focus-visible,
   font-weight: 700;
 }
 
+.texto-opcional {
+  font-weight: 400;
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+  text-transform: none;
+}
+
 .texto-ajuda {
   margin: 0 0 14px 0;
   font-size: 13px;
   color: var(--cor-texto-suave);
+}
+
+/*
+============================================
+4.1 LISTA DE FORMATOS ESPERADOS (checklist)
+============================================
+*/
+.lista-esperados {
+  list-style: none;
+  margin: 14px 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.linha-esperado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--cor-neutro-suave);
+  border-radius: 6px;
+  padding: 7px 10px 7px 14px;
+  font-size: 13px;
+}
+
+.linha-esperado-numero {
+  color: var(--cor-texto-suave);
+  flex-shrink: 0;
+}
+
+.linha-esperado-nome {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /*
@@ -315,6 +359,13 @@ input:focus-visible,
   color: var(--cor-texto-suave);
 }
 
+.zona-upload-botoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .zona-upload-nota {
   margin: 10px 0 0 0;
   font-size: 12px;
@@ -500,6 +551,58 @@ input:focus-visible,
 
 .badge-veredito--indeterminado {
   background-color: var(--cor-neutro-suave);
+  color: var(--cor-texto-suave);
+}
+
+.badge-veredito--falta {
+  background-color: var(--cor-aviso-suave);
+  color: var(--cor-aviso);
+}
+
+/*
+============================================
+8.1 RELATÓRIO DE ENTREGA
+============================================
+*/
+.lista-relatorio {
+  list-style: none;
+  margin: 14px 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linha-relatorio {
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.linha-relatorio--falta {
+  border-color: #fde7b0;
+  background-color: #fffaf0;
+}
+
+.linha-relatorio--reprovado {
+  border-color: #f5c6c6;
+  background-color: #fffafa;
+}
+
+.linha-relatorio-topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.linha-relatorio-formato {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.linha-relatorio-ficheiro {
+  font-size: 12.5px;
   color: var(--cor-texto-suave);
 }
 
