@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSChecker — Verificador de Materiais Criativos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <img class="logo-cabecalho" src="assets/logo-generico.png" alt="CSChecker">
+    <div class="cabecalho-texto">
+      <h1><span class="titulo-acento">CS</span>Checker</h1>
+      <p class="subtitulo">Verificador de Materiais Criativos</p>
+    </div>
+  </header>
+
+  <main class="conteudo-principal">
+
+    <!--
+    ============================================
+    1. FORMATO EM LOTE (aplicar o mesmo formato a vários materiais)
+    ============================================
+    -->
+    <section class="cartao secao-lote">
+      <h2>Aplicar um formato a todos os materiais</h2>
+      <p class="texto-ajuda">Útil quando estás a validar várias variantes do mesmo pedido (ex.: desktop + mobile de um Billboard).</p>
+      <div class="linha-lote">
+        <div class="campo-seletor-formato">
+          <input type="text" id="inputFormatoLote" class="input-formato" placeholder="Pesquisar fornecedor ou formato..." autocomplete="off" data-alvo="lote">
+        </div>
+        <button type="button" id="botaoAplicarLote" class="botao-secundario" disabled>Aplicar a todos</button>
+      </div>
+    </section>
+
+    <!--
+    ============================================
+    2. ZONA DE UPLOAD
+    ============================================
+    -->
+    <section id="zonaUpload" class="zona-upload">
+      <input type="file" id="inputFicheiros" multiple hidden accept="image/*,video/*,.html,.htm,.zip,.pdf">
+      <div class="zona-upload-conteudo">
+        <p class="zona-upload-titulo">Arrasta os materiais para aqui</p>
+        <p class="zona-upload-subtitulo">ou</p>
+        <button type="button" id="botaoEscolherFicheiros" class="botao-principal">Escolher ficheiros</button>
+        <p class="zona-upload-nota">Podes selecionar vários ao mesmo tempo — imagens, vídeos, HTML5 ou PDF.</p>
+      </div>
+    </section>
+
+    <!--
+    ============================================
+    3. BARRA DE AÇÕES + RESUMO
+    ============================================
+    -->
+    <div id="barraAcoes" class="barra-acoes" hidden>
+      <div id="resumoVerificacao" class="resumo-verificacao"></div>
+      <div class="barra-acoes-botoes">
+        <button type="button" id="botaoVerificarTudo" class="botao-principal">Verificar todos</button>
+        <button type="button" id="botaoLimparTudo" class="botao-limpar">Limpar tudo</button>
+      </div>
+    </div>
+
+    <!--
+    ============================================
+    4. LISTA DE MATERIAIS
+    ============================================
+    -->
+    <ul id="listaMateriais" class="lista-materiais"></ul>
+
+    <!-- Painel partilhado de resultados de pesquisa de formato (posicionado
+         por JS por baixo do input com foco — evita ter 1 painel por linha) -->
+    <div id="painelResultados" class="painel-resultados" hidden></div>
+
+  </main>
+
+  <div id="notificacaoToast" class="notificacao-toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

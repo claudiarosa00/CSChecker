@@ -1,0 +1,602 @@
+/*
+============================================
+1. CONFIGURAÇÃO GERAL
+Mesma paleta do CSBuilder (azul claro #60a5fa como único
+acento, resto neutro) — para as duas apps lerem como parte
+da mesma família de ferramentas.
+============================================
+*/
+:root {
+  --cor-fundo: #f7f5f4;
+  --cor-texto: #1a1a1a;
+  --cor-texto-suave: #6b6560;
+  --cor-destaque: #60a5fa;
+  --cor-destaque-escuro: #3b82f6;
+  --cor-destaque-suave: #eff6ff;
+  --cor-escuro: #1a1a1a;
+  --cor-borda: #e6e2df;
+  --cor-fundo-cartao: #ffffff;
+  --cor-sucesso: #15803d;
+  --cor-sucesso-suave: #dcfce7;
+  --cor-erro: #b91c1c;
+  --cor-erro-suave: #fee2e2;
+  --cor-neutro: #6b6560;
+  --cor-neutro-suave: #ece9e7;
+  --fonte-base: "Arial Nova", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fonte-base);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--cor-destaque);
+  outline-offset: 2px;
+}
+
+/*
+============================================
+2. CABEÇALHO
+============================================
+*/
+.cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--cor-escuro);
+  color: #ffffff;
+  padding: 14px 32px;
+  border-top: 4px solid var(--cor-destaque);
+}
+
+.logo-cabecalho {
+  display: block;
+  height: 56px;
+  width: 56px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.cabecalho h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.titulo-acento {
+  color: var(--cor-destaque);
+}
+
+.subtitulo {
+  margin: 2px 0 0 0;
+  font-size: 13px;
+  color: #b8b5b3;
+}
+
+/*
+============================================
+3. LAYOUT PRINCIPAL
+============================================
+*/
+.conteudo-principal {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 28px 24px 64px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cartao {
+  background-color: var(--cor-fundo-cartao);
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  padding: 18px 22px;
+}
+
+.cartao h2 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.texto-ajuda {
+  margin: 0 0 14px 0;
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+
+/*
+============================================
+4. SELETOR DE FORMATO (campo de pesquisa + painel de resultados)
+============================================
+*/
+.linha-lote {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.campo-seletor-formato {
+  flex: 1 1 280px;
+  position: relative;
+}
+
+.input-formato {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: var(--cor-texto);
+}
+
+.input-formato::placeholder {
+  color: #9a948e;
+}
+
+.input-formato--selecionado {
+  border-color: var(--cor-destaque);
+  background-color: var(--cor-destaque-suave);
+  font-weight: 600;
+}
+
+.painel-resultados {
+  position: absolute;
+  z-index: 100;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
+  max-height: 280px;
+  overflow-y: auto;
+  min-width: 280px;
+}
+
+.painel-resultados[hidden] {
+  display: none;
+}
+
+.resultado-formato {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--cor-borda);
+  padding: 9px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--cor-texto);
+}
+
+.resultado-formato:last-child {
+  border-bottom: none;
+}
+
+.resultado-formato:hover,
+.resultado-formato.ativo {
+  background-color: var(--cor-destaque-suave);
+}
+
+.resultado-formato strong {
+  display: block;
+  font-size: 13.5px;
+}
+
+.resultado-formato span {
+  display: block;
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+  margin-top: 1px;
+}
+
+.painel-resultados-vazio {
+  padding: 14px;
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+  text-align: center;
+}
+
+/*
+============================================
+5. BOTÕES
+============================================
+*/
+.botao-principal {
+  background-color: var(--cor-destaque);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botao-principal:hover:not(:disabled) {
+  background-color: var(--cor-destaque-escuro);
+}
+
+.botao-principal:disabled {
+  background-color: #c9c4c1;
+  color: #453f38;
+  cursor: not-allowed;
+}
+
+.botao-secundario {
+  background-color: #ffffff;
+  color: var(--cor-destaque-escuro);
+  border: 1px solid var(--cor-destaque);
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botao-secundario:hover:not(:disabled) {
+  background-color: var(--cor-destaque-suave);
+}
+
+.botao-secundario:disabled {
+  border-color: var(--cor-borda);
+  color: #9a948e;
+  cursor: not-allowed;
+}
+
+.botao-limpar {
+  background: none;
+  border: none;
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 4px;
+}
+
+.botao-limpar:hover {
+  color: var(--cor-erro);
+}
+
+/*
+============================================
+6. ZONA DE UPLOAD (drag & drop)
+============================================
+*/
+.zona-upload {
+  border: 2px dashed var(--cor-borda);
+  border-radius: 10px;
+  background-color: var(--cor-fundo-cartao);
+  padding: 36px 20px;
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.zona-upload--ativa {
+  border-color: var(--cor-destaque);
+  background-color: var(--cor-destaque-suave);
+}
+
+.zona-upload-conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.zona-upload-titulo {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.zona-upload-subtitulo {
+  margin: 0;
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+
+.zona-upload-nota {
+  margin: 10px 0 0 0;
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+}
+
+/*
+============================================
+7. BARRA DE AÇÕES + RESUMO
+============================================
+*/
+.barra-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: var(--cor-fundo);
+  padding: 10px 0;
+}
+
+.barra-acoes-botoes {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.resumo-verificacao {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.resumo-verificacao .contagem-aprovados {
+  color: var(--cor-sucesso);
+}
+
+.resumo-verificacao .contagem-reprovados {
+  color: var(--cor-erro);
+}
+
+/*
+============================================
+8. LISTA DE MATERIAIS
+============================================
+*/
+.lista-materiais {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-material {
+  background-color: var(--cor-fundo-cartao);
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  gap: 16px;
+}
+
+.item-material--aprovado {
+  border-left: 4px solid var(--cor-sucesso);
+}
+
+.item-material--reprovado {
+  border-left: 4px solid var(--cor-erro);
+}
+
+.item-material-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  background-color: var(--cor-neutro-suave);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--cor-texto-suave);
+  overflow: hidden;
+  text-align: center;
+}
+
+.item-material-preview img,
+.item-material-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-material-corpo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-material-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.item-material-nome {
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.item-material-remover {
+  background: none;
+  border: none;
+  color: var(--cor-texto-suave);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+
+.item-material-remover:hover {
+  color: var(--cor-erro);
+}
+
+.item-material-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.etiqueta-info {
+  display: inline-block;
+  background-color: var(--cor-neutro-suave);
+  color: var(--cor-texto-suave);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+.campo-seletor-formato--item {
+  /* .campo-seletor-formato tem flex:1 1 280px para a barra horizontal do
+     lote — dentro do cartão do material (coluna flex) isso fazia este
+     campo "crescer" e ocupar todo o espaço vertical sobrante do cartão. */
+  flex: none;
+  max-width: 420px;
+}
+
+.item-material-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.badge-veredito {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.badge-veredito--aprovado {
+  background-color: var(--cor-sucesso-suave);
+  color: var(--cor-sucesso);
+}
+
+.badge-veredito--reprovado {
+  background-color: var(--cor-erro-suave);
+  color: var(--cor-erro);
+}
+
+.badge-veredito--indeterminado {
+  background-color: var(--cor-neutro-suave);
+  color: var(--cor-texto-suave);
+}
+
+.lista-criterios {
+  list-style: none;
+  margin: 4px 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.criterio {
+  font-size: 12.5px;
+  display: flex;
+  gap: 6px;
+}
+
+.criterio-icone {
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.criterio--pass .criterio-icone {
+  color: var(--cor-sucesso);
+}
+
+.criterio--fail {
+  color: var(--cor-erro);
+}
+
+.criterio--fail .criterio-icone {
+  color: var(--cor-erro);
+}
+
+.criterio--neutro {
+  color: var(--cor-texto-suave);
+}
+
+.criterio--neutro .criterio-icone {
+  color: var(--cor-texto-suave);
+}
+
+/*
+============================================
+9. NOTIFICAÇÃO
+============================================
+*/
+.notificacao-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  background-color: var(--cor-escuro);
+  color: #ffffff;
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 60;
+  max-width: min(90vw, 420px);
+  text-align: center;
+}
+
+.notificacao-toast[hidden] {
+  display: none;
+}
+
+/*
+============================================
+10. RESPONSIVE
+============================================
+*/
+@media (max-width: 600px) {
+  .cabecalho {
+    padding: 12px 16px;
+  }
+
+  .logo-cabecalho {
+    height: 44px;
+    width: 44px;
+  }
+
+  .cabecalho h1 {
+    font-size: 20px;
+  }
+
+  .conteudo-principal {
+    padding: 20px 14px 48px 14px;
+  }
+
+  .item-material {
+    flex-direction: column;
+  }
+
+  .item-material-preview {
+    width: 100%;
+    height: 120px;
+  }
+}
