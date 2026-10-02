@@ -31,6 +31,9 @@ const inputFormatoLote = document.getElementById("inputFormatoLote");
 const botaoAplicarLote = document.getElementById("botaoAplicarLote");
 const inputFormatoEsperado = document.getElementById("inputFormatoEsperado");
 const listaEsperados = document.getElementById("listaEsperados");
+const inputPedidoExcel = document.getElementById("inputPedidoExcel");
+const botaoImportarPedido = document.getElementById("botaoImportarPedido");
+const pedidoResumo = document.getElementById("pedidoResumo");
 const secaoRelatorio = document.getElementById("secaoRelatorio");
 const listaRelatorio = document.getElementById("listaRelatorio");
 const painelResultados = document.getElementById("painelResultados");
@@ -605,6 +608,172 @@ function atualizarBarraAcoes() {
   const reprovados = verificados.filter((i) => i.resultado.veredito === "reprovado").length;
   resumoVerificacao.innerHTML = `<span class="contagem-aprovados">${aprovados} aprovado${aprovados !== 1 ? "s" : ""}</span> · <span class="contagem-reprovados">${reprovados} reprovado${reprovados !== 1 ? "s" : ""}</span> de ${itens.length}`;
 }
+
+/*
+============================================
+8.0 IMPORTAR PEDIDO DE SPECS (.xlsx exportado pelo CSBuilder)
+O CSBuilder exporta uma folha por meio (Digital/OOH/TV/Rádio/Cinema/
+Imprensa), com secções por objetivo (Awareness/Consideration/
+Conversion) e uma tabela por secção — colunas variam por meio (ver
+COLUNAS_POR_MEIO_EXCEL_PEDIDO, cópia da mesma estrutura usada para
+escrever o ficheiro). Em vez de montar a checklist de formatos
+esperados à mão, lemos esse ficheiro e extraímos quais formatos foram
+pedidos, casando Plataforma+Formato com a nossa base de specs.
+============================================
+*/
+
+// Mesma lista de colunas, por meio, que o CSBuilder usa para escrever o
+// Excel (a coluna fixa "#" vem sempre primeiro, antes destas). Só
+// precisamos de saber em que posição ficam "plataforma" e "formato" —
+// mas mantém-se a lista completa para o mapeamento ficar claro e fácil
+// de comparar com o CSBuilder caso a estrutura mude no futuro.
+const COLUNAS_POR_MEIO_EXCEL_PEDIDO = {
+  "Digital": ["canal", "plataforma", "formato", "tema", "dimensao", "aspectRatio", "peso", "tipoFicheiro", "copies", "observacoes", "link", "dataInicioCampanha", "dataEntrega"],
+  "OOH": ["plataforma", "formato", "temaCriativo", "dimensao", "aspectRatio", "tipoFicheiro", "entregaAF", "entregaMorada", "moradaEntregaMupi", "observacoes", "dataInicioCampanha", "dataEntrega"],
+  "TV": ["plataforma", "formato", "secundagem", "temaCriativo", "dimensao", "aspectRatio", "tipoFicheiro", "entregaTV", "observacoes", "dataInicioCampanha", "dataEntrega"],
+  "Rádio": ["plataforma", "formato", "secundagem", "temaCriativo", "tipoFicheiro", "observacoes", "dataInicioCampanha", "dataEntrega"],
+  "Cinema": ["plataforma", "formato", "dimensao", "aspectRatio", "tipoFicheiro", "observacoes", "dataInicioCampanha", "dataEntrega"],
+  "Imprensa": ["plataforma", "formato", "dimensao", "tipoFicheiro", "observacoes", "dataInicioCampanha", "dataEntrega"],
+};
+
+function normalizarTextoComparavel(texto) {
+  return removerAcentosParaComparar(String(texto || ""))
+    .trim()
+    .toLowerCase();
+}
+
+function removerAcentosParaComparar(texto) {
+  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+
+// O valor de uma célula do ExcelJS nem sempre é uma string simples — uma
+// célula com hyperlink, por exemplo, vem como { text, hyperlink }.
+function textoCelulaExcel(celula) {
+  const valor = celula.value;
+  if (valor === null || valor === undefined) return "";
+  if (typeof valor === "object") {
+    if (valor.richText) return valor.richText.map((parte) => parte.text).join("");
+    if (valor.text !== undefined) return String(valor.text);
+    if (valor.result !== undefined) return String(valor.result);
+    return "";
+  }
+  return String(valor).trim();
+}
+
+// Dado o nome de uma folha do Excel, tenta reconhecer a que meio
+// corresponde (comparação sem acentos/maiúsculas, porque o nome da folha
+// pode ter sido exportado noutra língua — ver CHAVE_TRADUCAO_MEIO no
+// CSBuilder). Devolve null se não reconhecer.
+function meioDoNomeFolha(nomeFolha) {
+  const alvo = normalizarTextoComparavel(nomeFolha);
+  const chave = Object.keys(COLUNAS_POR_MEIO_EXCEL_PEDIDO).find((k) => normalizarTextoComparavel(k) === alvo);
+  return chave || null;
+}
+
+// Varre uma folha já reconhecida (colunasChaves conhecidas) e devolve uma
+// entrada {plataforma, formato} por cada linha numerada ("#" preenchido
+// com 1, 2, 3...) — essa é sempre a primeira linha de cada
+// formato pedido, mesmo quando esse formato se espalha por mais do que
+// uma linha (vários temas): as linhas de continuação ficam com a coluna
+// "#" em branco e são ignoradas aqui.
+function extrairPedidosDaFolha(folha, colunasChaves) {
+  const indiceFormato = colunasChaves.indexOf("formato") + 2;
+  const indicePlataforma = colunasChaves.indexOf("plataforma") + 2;
+  if (indiceFormato < 2 || indicePlataforma < 2) return [];
+
+  const pedidos = [];
+  folha.eachRow((linha) => {
+    const valorPrimeiraColuna = linha.getCell(1).value;
+    const ehLinhaNumerada = typeof valorPrimeiraColuna === "number" && Number.isInteger(valorPrimeiraColuna) && valorPrimeiraColuna > 0;
+    if (!ehLinhaNumerada) return;
+
+    const formato = textoCelulaExcel(linha.getCell(indiceFormato));
+    const plataforma = textoCelulaExcel(linha.getCell(indicePlataforma));
+    if (formato && plataforma) {
+      pedidos.push({ plataforma, formato });
+    }
+  });
+  return pedidos;
+}
+
+// Casa um pedido (texto solto do Excel) com um formato concreto da nossa
+// base — por Veículo + Formato, sem olhar ao Meio (o nome da folha já
+// filtra isso na prática, e exigir correspondência exata de Meio só
+// rejeitaria casos legítimos se o mapeamento de meio falhar). Devolve o
+// formato quando há exatamente uma correspondência; null em caso de
+// ambiguidade ou de não encontrar nada — para nunca associar "à sorte".
+function casarPedidoComFormato(pedido) {
+  const alvoVeiculo = normalizarTextoComparavel(pedido.plataforma);
+  const alvoFormato = normalizarTextoComparavel(pedido.formato);
+  const candidatos = FORMATOS.filter(
+    (f) => normalizarTextoComparavel(f.veiculo) === alvoVeiculo && normalizarTextoComparavel(f.formato) === alvoFormato
+  );
+  return candidatos.length === 1 ? candidatos[0] : null;
+}
+
+async function processarPedidoExcel(file) {
+  let workbook;
+  try {
+    const buffer = await file.arrayBuffer();
+    workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(buffer);
+  } catch (erro) {
+    mostrarToast("Não foi possível ler este ficheiro — confirma que é um .xlsx exportado pelo CSBuilder.");
+    console.error(erro);
+    return;
+  }
+
+  const todosPedidos = [];
+  const folhasIgnoradas = [];
+  workbook.worksheets.forEach((folha) => {
+    const meio = meioDoNomeFolha(folha.name);
+    if (!meio) {
+      folhasIgnoradas.push(folha.name);
+      return;
+    }
+    const colunasChaves = COLUNAS_POR_MEIO_EXCEL_PEDIDO[meio];
+    todosPedidos.push(...extrairPedidosDaFolha(folha, colunasChaves));
+  });
+
+  if (todosPedidos.length === 0) {
+    mostrarToast("Não foi possível encontrar formatos pedidos neste ficheiro — confirma que é o Excel exportado pelo CSBuilder.");
+    return;
+  }
+
+  let adicionados = 0;
+  const naoReconhecidos = [];
+  todosPedidos.forEach((pedido) => {
+    const formato = casarPedidoComFormato(pedido);
+    if (formato) {
+      esperados.push({ id: proximoIdEsperado++, formatoId: formato.id, itemIdAssociado: null });
+      adicionados += 1;
+    } else {
+      naoReconhecidos.push(`${pedido.plataforma} · ${pedido.formato}`);
+    }
+  });
+
+  tentarAutoAssociar(itens.filter((i) => !i.formatoId));
+  atualizarTudo();
+
+  const primeiraFolha = workbook.worksheets.find((f) => meioDoNomeFolha(f.name));
+  const cliente = primeiraFolha ? textoCelulaExcel(primeiraFolha.getCell("F3")) : "";
+  const campanha = primeiraFolha ? textoCelulaExcel(primeiraFolha.getCell("F4")) : "";
+  pedidoResumo.textContent = cliente || campanha ? `Pedido: ${cliente}${cliente && campanha ? " — " : ""}${campanha}` : "";
+
+  let mensagem = `${adicionados} formato${adicionados !== 1 ? "s" : ""} adicionado${adicionados !== 1 ? "s" : ""} à checklist a partir do pedido.`;
+  if (naoReconhecidos.length > 0) {
+    mensagem += ` ${naoReconhecidos.length} não reconhecido${naoReconhecidos.length !== 1 ? "s" : ""} (${naoReconhecidos.slice(0, 3).join("; ")}${naoReconhecidos.length > 3 ? "…" : ""}) — adiciona-os manualmente na pesquisa abaixo.`;
+  }
+  mostrarToast(mensagem);
+}
+
+botaoImportarPedido.addEventListener("click", () => inputPedidoExcel.click());
+
+inputPedidoExcel.addEventListener("change", (ev) => {
+  const file = ev.target.files[0];
+  if (file) processarPedidoExcel(file);
+  inputPedidoExcel.value = "";
+});
 
 /*
 ============================================

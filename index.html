@@ -30,6 +30,14 @@
     <section class="cartao">
       <h2>Formatos esperados nesta entrega <span class="texto-opcional">(opcional)</span></h2>
       <p class="texto-ajuda">Define aqui os formatos que esta entrega devia incluir. Ao carregares os materiais (ficheiro a ficheiro ou uma pasta inteira), a app tenta associar automaticamente cada ficheiro ao formato esperado certo pelas dimensões, e mostra no relatório o que falta ou não está correto.</p>
+
+      <div class="linha-importar-pedido">
+        <input type="file" id="inputPedidoExcel" hidden accept=".xlsx">
+        <button type="button" id="botaoImportarPedido" class="botao-secundario">Importar pedido do CSBuilder (.xlsx)</button>
+        <span id="pedidoResumo" class="pedido-resumo"></span>
+      </div>
+      <p class="texto-ajuda texto-ajuda--separador">ou adiciona formatos manualmente:</p>
+
       <div class="linha-lote">
         <div class="campo-seletor-formato">
           <input type="text" id="inputFormatoEsperado" class="input-formato" placeholder="Pesquisar fornecedor ou formato para adicionar à lista..." autocomplete="off" data-alvo="esperado">
@@ -114,6 +122,9 @@
 
   <div id="notificacaoToast" class="notificacao-toast" role="status" aria-live="polite" hidden></div>
 
+  <!-- Biblioteca ExcelJS (ficheiro local, não precisa de internet) — só
+       usada para LER o pedido de specs exportado pelo CSBuilder. -->
+  <script src="lib/exceljs.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

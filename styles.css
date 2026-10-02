@@ -134,6 +134,28 @@ input:focus-visible,
 
 /*
 ============================================
+4.0 IMPORTAR PEDIDO DE SPECS (.xlsx exportado pelo CSBuilder)
+============================================
+*/
+.linha-importar-pedido {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pedido-resumo {
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+
+.texto-ajuda--separador {
+  margin: 14px 0 10px 0;
+  text-align: center;
+}
+
+/*
+============================================
 4.1 LISTA DE FORMATOS ESPERADOS (checklist)
 ============================================
 */

@@ -16,9 +16,13 @@ Usa a mesma base de formatos do CSBuilder (`data/base-formatos.xlsx`), por isso 
 
 Para o caso de receber uma pasta com os materiais de uma campanha e precisar de confirmar que está tudo lá e correto:
 
-1. **Define os formatos esperados** — no primeiro cartão da página, pesquisa e adiciona cada formato que esta entrega devia conter (ex.: Halfpage + Billboard + Mrec).
+1. **Define os formatos esperados** — duas formas, podem combinar-se:
+   - **Importar o pedido do CSBuilder** — botão "Importar pedido do CSBuilder (.xlsx)", no primeiro cartão da página. Carrega o Excel que o CSBuilder exportou para esta campanha e a checklist é preenchida automaticamente com os formatos lá pedidos (casados com a base pelo Fornecedor/Veículo + Formato). Formatos do pedido que não sejam reconhecidos ficam assinalados, para adicionares à mão.
+   - **Manualmente** — pesquisa e adiciona cada formato um a um.
 2. **Carrega a pasta** — botão "Carregar pasta" (ou arrasta a pasta inteira para a zona de upload). A ferramenta lê as dimensões reais de cada ficheiro e associa-o automaticamente ao formato esperado certo — só quando a correspondência é inequívoca (uma única dimensão compatível); caso contrário, fica por atribuir manualmente, para nunca associar errado "à sorte".
-3. **Verificar todos** — aparece um **Relatório de entrega** a dizer, para cada formato esperado: entregue e aprovado, entregue mas reprovado (com o motivo), ou **em falta**. Ficheiros que não correspondem a nenhum formato esperado aparecem à parte, marcados como "Extra".
+3. **Verificar todos** — aparece um **Relatório de entrega** a dizer, para cada formato esperado (= cada linha do pedido): entregue e aprovado, entregue mas reprovado (com o motivo), ou **em falta**. Ficheiros que não correspondem a nenhum formato esperado aparecem à parte, marcados como "Extra".
+
+Isto é o fluxo pensado para o caso de uso real: pedir os formatos no CSBuilder, receber uma pasta de materiais do fornecedor/agência criativa, e confirmar de imediato se o que chegou bate certo com o que foi pedido.
 
 Nada é enviado para fora do browser — a leitura das dimensões/peso dos ficheiros é feita localmente, no próprio navegador.
 
@@ -37,7 +41,8 @@ Quando a base não tem informação suficiente para um destes critérios (ex. um
 |---|---|
 | `index.html` | Estrutura da página |
 | `styles.css` | Visual — mesma paleta e família do CSBuilder (azul claro, neutros) |
-| `app.js` | Leitura de ficheiros, pesquisa de formatos e lógica de verificação |
+| `app.js` | Leitura de ficheiros, pesquisa de formatos, importação do pedido e lógica de verificação |
+| `lib/exceljs.min.js` | Biblioteca usada só para ler o .xlsx do pedido exportado pelo CSBuilder (a mesma já usada no CSBuilder para escrever) |
 | `data/base-formatos.xlsx` | Base de formatos original (mesma fonte do CSBuilder) |
 | `data/specs.json` | Gerado a partir do Excel acima — specs já estruturadas (dimensões, peso em bytes, tipos, aspect ratio) para o app.js poder comparar sem ter de interpretar texto livre no browser |
 | `scripts/gerar_specs_json.py` | Script que gera `data/specs.json` a partir do Excel — corre-se sempre que a base de formatos for atualizada |
